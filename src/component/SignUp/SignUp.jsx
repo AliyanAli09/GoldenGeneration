@@ -7,8 +7,8 @@ import PersonalDetails from './PersonalDetails';
 import SignUpProgress from './SignUpProgress';
 import { toast } from 'react-hot-toast';
 import { auth, db } from '../../firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
+import { doc, setDoc, writeBatch } from 'firebase/firestore';
 import { FaArrowLeft } from 'react-icons/fa';
 import WorkBackground from './WorkBackground';
 import Lifestyle from './Lifestyle';
@@ -49,58 +49,161 @@ const SignUp = () => {
           return;
         }
 
-        toast.loading(t('auth.signup.creating'), { id: 'signup' });
+        // Show loading toast
+        const loadingToast = toast.loading(t('auth.signup.creating'), { id: 'signup' });
+
+        // Check if email is already in use before creating user
+        try {
+          const methods = await fetchSignInMethodsForEmail(auth, credentialsData.email);
+          if (methods && methods.length > 0) {
+            throw new Error('auth/email-already-in-use');
+          }
+        } catch (error) {
+          if (error.code === 'auth/email-already-in-use') {
+            toast.error(t('auth.credentials.email.inUse'), { id: loadingToast });
+            return;
+          }
+          console.error('Error checking email:', error);
+        }
         
         // Create user in Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           credentialsData.email,
           credentialsData.password
-        );
-
-        // Prepare user data including veterans data
-        const userData = {
-          idVerification: idVerificationData,
-          credentials: {
-            email: credentialsData.email,
-            username: credentialsData.username
-          },
-          personalDetails: personalData,
-          workBackground: workData || {},
-          lifestyle: lifestyleData || {},
-          veteransCommunity: veteransData || {},
-          createdAt: new Date().toISOString(),
-        };
-
-        // Store user data in Firestore
-        await setDoc(doc(db, 'users', userCredential.user.uid), userData);
-
-        // Store username separately
-        await setDoc(doc(db, 'usernames', credentialsData.username), {
-          uid: userCredential.user.uid,
+        ).catch(async (error) => {
+          // Handle specific auth errors
+          if (error.code === 'auth/email-already-in-use') {
+            toast.error(t('auth.credentials.email.inUse'), { id: loadingToast });
+          } else if (error.code === 'auth/invalid-email') {
+            toast.error(t('auth.credentials.email.invalid'), { id: loadingToast });
+          } else if (error.code === 'auth/weak-password') {
+            toast.error(t('auth.credentials.password.requirements'), { id: loadingToast });
+          } else {
+            toast.error(error.message || t('auth.signup.error.general'), { id: loadingToast });
+          }
+          throw error;
         });
 
-        // Create a separate collection for veterans data
-        if (veteransData) {
-          await setDoc(doc(db, 'veterans', userCredential.user.uid), {
-            ...veteransData,
-            userId: userCredential.user.uid,
-            email: credentialsData.email,
-            createdAt: new Date().toISOString(),
-          });
-        }
+        // Helper function to remove undefined values and clean data
+        const cleanObject = (obj) => {
+          return Object.entries(obj).reduce((acc, [key, value]) => {
+            if (value !== undefined && value !== null) {
+              if (typeof value === 'object' && !Array.isArray(value)) {
+                acc[key] = cleanObject(value);
+              } else {
+                acc[key] = value;
+              }
+            }
+            return acc;
+          }, {});
+        };
 
-        // Reset store and show success message
-        resetStore();
-        toast.success(t('auth.signup.success'), { id: 'signup' });
-        
-        // Navigate to login after a delay
-        setTimeout(() => {
-          navigate('/login');
-        }, 1500);
+        // Helper function to validate required fields
+        const validateRequiredFields = (data, requiredFields) => {
+          const missingFields = requiredFields.filter(field => !data[field]);
+          if (missingFields.length > 0) {
+            throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+          }
+        };
+
+        // Debug log to check personalData before validation
+        console.log('personalData at submit:', personalData);
+        // Validate required fields for each section
+        validateRequiredFields(idVerificationData, ['firstName', 'lastName', 'idNumber', 'dateOfBirth', 'gender']);
+        validateRequiredFields(credentialsData, ['email', 'username']);
+        validateRequiredFields(personalData, ['address', 'phoneNumber', 'nativeLanguage']);
+
+        // Prepare user data with proper structure and clean undefined values
+        const userData = cleanObject({
+          idVerification: {
+            ...idVerificationData,
+            createdAt: new Date().toISOString()
+          },
+          credentials: {
+            email: credentialsData.email,
+            username: credentialsData.username,
+            createdAt: new Date().toISOString()
+          },
+          personalDetails: {
+            ...personalData,
+            createdAt: new Date().toISOString()
+          },
+          workBackground: workData ? {
+            ...workData,
+            createdAt: new Date().toISOString()
+          } : {},
+          lifestyle: lifestyleData ? {
+            ...lifestyleData,
+            createdAt: new Date().toISOString()
+          } : {},
+          veteransCommunity: veteransData ? {
+            ...veteransData,
+            createdAt: new Date().toISOString()
+          } : {},
+          metadata: {
+            createdAt: new Date().toISOString(),
+            lastUpdated: new Date().toISOString(),
+            signupCompleted: true,
+            lastLogin: null,
+            status: 'active'
+          }
+        });
+
+        // Store user data in Firestore with error handling
+        try {
+          // Create a batch write to ensure atomicity
+          const batch = writeBatch(db);
+
+          // Add main user data to batch
+          const userRef = doc(db, 'users', userCredential.user.uid);
+          batch.set(userRef, userData);
+
+          // Add username lookup to batch
+          const usernameRef = doc(db, 'usernames', credentialsData.username.toLowerCase());
+          batch.set(usernameRef, {
+            uid: userCredential.user.uid,
+            createdAt: new Date().toISOString()
+          });
+
+          // Add veterans data to batch if it exists
+          if (veteransData) {
+            const cleanVeteransData = cleanObject({
+              ...veteransData,
+              userId: userCredential.user.uid,
+              email: credentialsData.email,
+              createdAt: new Date().toISOString(),
+              lastUpdated: new Date().toISOString()
+            });
+            const veteransRef = doc(db, 'veterans', userCredential.user.uid);
+            batch.set(veteransRef, cleanVeteransData);
+          }
+
+          // Commit the batch
+          await batch.commit();
+
+          // Update loading toast to success
+          toast.success(t('auth.signup.success'), { id: loadingToast });
+          
+          // Reset store
+          resetStore();
+          
+          // Navigate to login after a delay
+          setTimeout(() => {
+            navigate('/login');
+          }, 1500);
+        } catch (firestoreError) {
+          console.error('Firestore error:', firestoreError);
+          // If Firestore fails, delete the auth user to maintain consistency
+          await userCredential.user.delete();
+          throw new Error(t('auth.signup.error.firestore'));
+        }
       } catch (error) {
         console.error('Signup error:', error);
-        toast.error(error.message || t('auth.signup.error.general'), { id: 'signup' });
+        // Don't show error message if it's already shown in the catch block above
+        if (!error.code || !error.code.startsWith('auth/')) {
+          toast.error(error.message || t('auth.signup.error.general'), { id: 'signup' });
+        }
       }
     } else {
       setCurrentStep(step + 1);

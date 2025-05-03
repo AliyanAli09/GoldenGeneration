@@ -104,29 +104,61 @@
       },
       "personalDetails": {
         "title": "פרטים אישיים",
-        "subtitle": "אנא ספק את הפרטים האישיים שלך",
-        "contactInfo": {
-          "title": "פרטי התקשרות",
-          "phoneNumber": "מספר טלפון",
-          "maritalStatus": "מצב משפחתי",
-          "address": "כתובת"
+        "subtitle": "ספר לנו על עצמך",
+        "phone": {
+          "label": "מספר טלפון (אופציונלי)",
+          "placeholder": "הזן את מספר הטלפון שלך"
         },
-        "languageOrigin": {
-          "title": "שפה ומוצא",
-          "nativeLanguage": "שפת אם",
-          "hebrewLevel": "רמת עברית",
-          "arrivalDate": "תאריך הגעה",
-          "originCountry": "ארץ מוצא"
+        "maritalStatus": {
+          "label": "מצב משפחתי",
+          "placeholder": "בחר מצב משפחתי",
+          "options": {
+            "single": "רווק/ה",
+            "married": "נשוי/אה",
+            "divorced": "גרוש/ה",
+            "widowed": "אלמן/ה"
+          }
         },
-        "additionalInfo": {
-          "title": "מידע נוסף",
-          "healthCondition": "מצב בריאותי",
-          "militaryService": "שירות צבאי/לאומי",
-          "additionalOptions": "אפשרויות נוספות",
-          "hasCar": "יש לי רכב",
-          "livingAlone": "גר לבד",
-          "familyInSettlement": "משפחה בהתיישבות",
-          "hasWeapon": "נושא נשק"
+        "address": {
+          "label": "כתובת",
+          "placeholder": "הזן את הכתובת המלאה שלך"
+        },
+        "nativeLanguage": {
+          "label": "שפת אם",
+          "placeholder": "הזן את שפת האם שלך"
+        },
+        "hebrewLevel": {
+          "label": "רמת עברית",
+          "placeholder": "הזן את רמת העברית שלך"
+        },
+        "arrivalDate": {
+          "label": "תאריך הגעה",
+          "placeholder": "בחר תאריך הגעה"
+        },
+        "originCountry": {
+          "label": "ארץ מוצא",
+          "placeholder": "הזן את ארץ המוצא שלך"
+        },
+        "healthCondition": {
+          "label": "מצב בריאותי",
+          "placeholder": "הזן את מצבך הבריאותי"
+        },
+        "militaryService": {
+          "label": "שירות צבאי",
+          "placeholder": "הזן את שירותך הצבאי"
+        },
+        "additionalOptions": "אפשרויות נוספות",
+        "hasCar": {
+          "label": "יש רכב"
+        },
+        "livingAlone": {
+          "label": "גר לבד"
+        },
+        "familyInSettlement": {
+          "label": "משפחה בהתיישבות"
+        },
+        "hasWeapon": {
+          "label": "נושא נשק"
         }
       },
       "workBackground": {

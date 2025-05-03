@@ -116,7 +116,44 @@
             "placeholder": "أدخل علاقتك بجهة الاتصال"
           }
         },
-        "continue": "متابعة"
+        "continue": "متابعة",
+        "nativeLanguage": {
+          "label": "اللغة الأم",
+          "placeholder": "أدخل لغتك الأم"
+        },
+        "hebrewLevel": {
+          "label": "مستوى العبرية",
+          "placeholder": "أدخل مستوى العبرية لديك"
+        },
+        "arrivalDate": {
+          "label": "تاريخ الوصول",
+          "placeholder": "اختر تاريخ الوصول"
+        },
+        "originCountry": {
+          "label": "بلد المنشأ",
+          "placeholder": "أدخل بلد منشأك"
+        },
+        "healthCondition": {
+          "label": "الحالة الصحية",
+          "placeholder": "أدخل حالتك الصحية"
+        },
+        "militaryService": {
+          "label": "الخدمة العسكرية",
+          "placeholder": "أدخل خدمتك العسكرية"
+        },
+        "additionalOptions": "خيارات إضافية",
+        "hasCar": {
+          "label": "يمتلك سيارة"
+        },
+        "livingAlone": {
+          "label": "يعيش بمفرده"
+        },
+        "familyInSettlement": {
+          "label": "عائلة في المستوطنة"
+        },
+        "hasWeapon": {
+          "label": "يمتلك سلاح"
+        }
       },
       "workBackground": {
         "title": "الخبرة العملية",

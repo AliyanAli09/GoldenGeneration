@@ -116,7 +116,44 @@
             "placeholder": "Укажите ваше отношение к контактному лицу"
           }
         },
-        "continue": "Продолжить"
+        "continue": "Продолжить",
+        "nativeLanguage": {
+          "label": "Родной язык",
+          "placeholder": "Введите ваш родной язык"
+        },
+        "hebrewLevel": {
+          "label": "Уровень иврита",
+          "placeholder": "Введите ваш уровень иврита"
+        },
+        "arrivalDate": {
+          "label": "Дата прибытия",
+          "placeholder": "Выберите дату прибытия"
+        },
+        "originCountry": {
+          "label": "Страна происхождения",
+          "placeholder": "Введите вашу страну происхождения"
+        },
+        "healthCondition": {
+          "label": "Состояние здоровья",
+          "placeholder": "Введите ваше состояние здоровья"
+        },
+        "militaryService": {
+          "label": "Военная служба",
+          "placeholder": "Введите вашу военную службу"
+        },
+        "additionalOptions": "Дополнительные опции",
+        "hasCar": {
+          "label": "Есть автомобиль"
+        },
+        "livingAlone": {
+          "label": "Живу один"
+        },
+        "familyInSettlement": {
+          "label": "Семья в поселении"
+        },
+        "hasWeapon": {
+          "label": "Есть оружие"
+        }
       },
       "workBackground": {
         "title": "Профессиональный опыт",

@@ -116,7 +116,44 @@
             "placeholder": "Enter your relationship to the contact"
           }
         },
-        "continue": "Continue"
+        "continue": "Continue",
+        "nativeLanguage": {
+          "label": "Native Language",
+          "placeholder": "Enter your native language"
+        },
+        "hebrewLevel": {
+          "label": "Hebrew Level",
+          "placeholder": "Enter your Hebrew level"
+        },
+        "arrivalDate": {
+          "label": "Arrival Date",
+          "placeholder": "Select your arrival date"
+        },
+        "originCountry": {
+          "label": "Country of Origin",
+          "placeholder": "Enter your country of origin"
+        },
+        "healthCondition": {
+          "label": "Health Condition",
+          "placeholder": "Enter your health condition"
+        },
+        "militaryService": {
+          "label": "Military Service",
+          "placeholder": "Enter your military service"
+        },
+        "additionalOptions": "Additional Options",
+        "hasCar": {
+          "label": "Has Car"
+        },
+        "livingAlone": {
+          "label": "Living Alone"
+        },
+        "familyInSettlement": {
+          "label": "Family in Settlement"
+        },
+        "hasWeapon": {
+          "label": "Has Weapon"
+        }
       },
       "workBackground": {
         "title": "Work Background",
