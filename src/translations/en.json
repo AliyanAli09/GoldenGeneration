@@ -357,7 +357,7 @@
         },
         "idImage": {
           "label": "ID Document Image",
-          "uploadButton": "Upload a file",
+          "uploadButton": "Upload ID Document",
           "dragDrop": "or drag and drop",
           "fileTypes": "PNG, JPG, JPEG up to 5MB",
           "fileSelected": "File selected successfully"
@@ -388,6 +388,7 @@
           "eng": "English"
         },
         "uploadInstructions": "Please upload or scan your ID for auto-fill, or fill the form manually.",
+        "uploadButton": "Upload ID Document",
         "startScanning": "Start Scanning",
         "acceptedFormats": "Accepted formats: JPG, JPEG, PNG (max 5MB)",
         "form": {
