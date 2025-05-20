@@ -1,8 +1,5 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Select } from 'antd';
-
-const { Option } = Select;
 
 const LanguageSwitcher = () => {
   const { language, changeLanguage, t } = useLanguage();
@@ -14,23 +11,22 @@ const LanguageSwitcher = () => {
     { code: 'ar', name: 'العربية' }
   ];
 
-  const handleLanguageChange = (value) => {
-    changeLanguage(value);
+  const handleLanguageChange = (e) => {
+    changeLanguage(e.target.value);
   };
 
   return (
-    <Select
+    <select
       value={language}
       onChange={handleLanguageChange}
-      style={{ width: 120 }}
-      dropdownStyle={{ direction: 'ltr' }}
+      style={{ width: 120, padding: '4px', borderRadius: '4px', border: '1px solid #ccc' }}
     >
       {languages.map((lang) => (
-        <Option key={lang.code} value={lang.code}>
+        <option key={lang.code} value={lang.code}>
           {lang.name}
-        </Option>
+        </option>
       ))}
-    </Select>
+    </select>
   );
 };
 
